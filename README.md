@@ -54,8 +54,8 @@
 
 # Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
 
-    ![Alt text](<Screen Shot 2023-09-13 at 05.25.46.png>)
-
+    ristek.link/baganPBP
+    
     - urls.py 
         request dari user awalnya akan diarahkan ke file urls.py untuk mencari pola url yang cocok
     - views.py 
