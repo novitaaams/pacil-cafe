@@ -23,18 +23,19 @@
 
 # Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial). 
 1. Membuat input form untuk menambahkan objek model pada app sebelumnya.
-        - Membuat file bernama "forms.py" pada "main" dan isi dengan : 
+        - Membuat file baru dengan mama forms.py pada main untuk membuat struktu form yang dapat menerima produk baru. Lalu tambahkan kode dibawah : 
             from django.forms import ModelForm
             from main.models import Item
             class ItemForm(ModelForm):
                 class Meta:
                     model = Item
                     fields = ["name", "amount", "description"]
+        - sesuai dengan ketentuan soal, yaitu modelnya bernama Item.
         - Buka views.py pada main dan tambahkan import :  
             from django.http import HttpResponseRedirect
             from main.forms import ItemForm
             from django.urls import reverse
-        - Membuat fungsi baru bernama "create_item" pada "views.py". Isi dengan
+        - Membuat fungsi baru bernama "create_item" pada "views.py". Isi dengan : 
             def create_item(request):
             form = ItemForm(request.POST or None)
 
@@ -44,6 +45,7 @@
 
             context = {'form': form}
             return render(request, "create_Item.html", context)
+        - nama creat item karena product pada tutorial diganti dengan Item, sesuai dengan ketentuan soal
         - Ubah fungsi show_main pada views.py menjadi :
             def show_main(request):
                 items = Item.objects.all()
@@ -55,6 +57,7 @@
             }
 
                 return render(request, "main.html", context)
+        - fungsi Item.objects.all() digunakan untuk mengambil seluruh object item pada database. 
         - buka urls.py pada main dan import crate_item 
             from main.views import show_main, create_item
         - Menambahkan path url pada "urlpatterns" yang ada di "urls.py" pada direktori "main" supaya bisa mengakses fungsi yang sudah di-import sebelumnya 
@@ -116,8 +119,7 @@
 - Buka views.py pada main dan import : 
         from django.http import HttpResponse
         from django.core import serializers
-- membuat fungsi bernama show_xml yang menerima parameter request. show_xml mempunya variabel data yang isinya adalah hasil query dari seluruh data yang ada. show_xml mengembalikan fungsi berupa HTTPResponse yang berisi parameter data hasil query.
-- Membuat fungsi lain bernama "show_json", "show_xml_by_id", dan"show_json_by_id" seperti berikut
+- membuat fungsi bernama show_xml yang menerima parameter request. show_xml, show_jason, show_xml_by_id dan show_json_by_id dengan cara berikut :
     def show_xml(request):
         data = Item.objects.all()
         return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
@@ -134,6 +136,8 @@
         data = Item.objects.filter(pk=id)
         return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
+def show_xml dan show_json akan menampilkan semuanya, sedangkan, show_xml_by_id dan show_json_by_id akan menampilkan sesuai dengan id yang dimasukkan. 
+
 3. Membuat routing URL untuk masing-masing views yang telah ditambahkan pada poin 2
 - Buka file urls.py yang terdapat pada main dan import :
     from main.views import show_main, create_item, show_xml, show_json, show_xml_by_id, show_json_by_id
@@ -146,7 +150,8 @@
         python3 manage.py runserver
         dan buka http://localhost:8000/xml, http://localhost:8000/json, http://localhost:8000/xml/[id], http://localhost:8000/json/[id],
 
-hasil url = ristek.link/pbptugas3
+hasil ss url = ristek.link/pbptugas3
+
 # Tugas 2
 # Penjelasan mengenai impelementasi checklist
 
