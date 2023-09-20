@@ -119,7 +119,7 @@
 - Buka views.py pada main dan import : 
         from django.http import HttpResponse
         from django.core import serializers
-- membuat fungsi bernama show_xml yang menerima parameter request. show_xml, show_jason, show_xml_by_id dan show_json_by_id dengan cara berikut :
+- membuat fungsi bernama show_xml dan show_jason yang menerima parameter request dan show_xml_by_id dan show_json_by_id yang menerima paramter request dan id dengan cara berikut :
     def show_xml(request):
         data = Item.objects.all()
         return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
@@ -136,12 +136,12 @@
         data = Item.objects.filter(pk=id)
         return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
-def show_xml dan show_json akan menampilkan semuanya, sedangkan, show_xml_by_id dan show_json_by_id akan menampilkan sesuai dengan id yang dimasukkan. 
+def show_xml dan show_json akan menampilkan semuanya. sedangkan, show_xml_by_id dan show_json_by_id akan menampilkan sesuai dengan id yang dimasukkan. 
 
 3. Membuat routing URL untuk masing-masing views yang telah ditambahkan pada poin 2
 - Buka file urls.py yang terdapat pada main dan import :
     from main.views import show_main, create_item, show_xml, show_json, show_xml_by_id, show_json_by_id
-- Menambahkan path url pada "urlpatterns" yang ada di "urls.py" pada direktori "main" untuk mengakses fungsi yang sudah diimpor tadi
+- Menambahkan path url pada "urlpatterns" yang ada di "urls.py" pada direktori "main" untuk mengakses fungsi yang sudah diimpor tadi dengan cara berikut : 
     - path('xml/', show_xml, name='show_xml'), 
     - path('json/', show_json, name='show_json'), 
     - path('xml/<int:id>/', show_xml_by_id, name='show_xml_by_id'),
