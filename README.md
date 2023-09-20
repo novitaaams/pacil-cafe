@@ -22,7 +22,7 @@
     JSON sering digunakan dalam pertukaran data karena memiliki format yang sangat sederhana dan mudah dibaca oleh manusia. Format JSON juga lebih ringan dibandingkan dengan XML dimana hal ini penting untuk efisiensi dan kecepatan dalam pengembangan web. JSON juga memiliki kemampuan untuk mengakomodasi tipe data yang umum digunakan dan dapat diimplementasikan dengan mudah dalam berbagai bahasa pemrograman. Dengan fleksibilitas dalam pengaturan struktur data dan kemampuannya untuk menyisipkan informasi, JSON menjadi format data yang sangat sesuai untuk berbagai keperluan pertukaran data dalam lingkungan web modern.
 
 # Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial). 
-    1. Membuat input form untuk menambahkan objek model pada app sebelumnya.
+1. Membuat input form untuk menambahkan objek model pada app sebelumnya.
         - Membuat file bernama "forms.py" pada "main" dan isi dengan : 
             from django.forms import ModelForm
             from main.models import Item
@@ -48,9 +48,9 @@
             def show_main(request):
                 items = Item.objects.all()
                 context = {
-                'nama_aplikasi': 'Pacil Library',
-                'nama': "Nabila Zavira",
-                'kelas': "PBP D", 
+                'nama_aplikasi': 'Pacil Cafe',
+                'nama': "Novita Mulia Sari",
+                'kelas': "PBP A", 
                 'items': items,
             }
 
@@ -112,7 +112,7 @@
         - Run project django dengan mengaktifkan env terlebih dahulu lalu jalankan 
             python3 manage.py runserver
             dan buka http://localhost:8000 
-# Tambahkan 5 fungsi views untuk melihat objek yang sudah ditambahkan dalam format HTML, XML, JSON, XML by ID, dan JSON by ID
+2. Tambahkan 5 fungsi views untuk melihat objek yang sudah ditambahkan dalam format HTML, XML, JSON, XML by ID, dan JSON by ID
 - Buka views.py pada main dan import : 
         from django.http import HttpResponse
         from django.core import serializers
@@ -134,7 +134,7 @@
         data = Item.objects.filter(pk=id)
         return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 
-# Membuat routing URL untuk masing-masing views yang telah ditambahkan pada poin 2
+3. Membuat routing URL untuk masing-masing views yang telah ditambahkan pada poin 2
 - Buka file urls.py yang terdapat pada main dan import :
     from main.views import show_main, create_item, show_xml, show_json, show_xml_by_id, show_json_by_id
 - Menambahkan path url pada "urlpatterns" yang ada di "urls.py" pada direktori "main" untuk mengakses fungsi yang sudah diimpor tadi
@@ -146,7 +146,7 @@
         python3 manage.py runserver
         dan buka http://localhost:8000/xml, http://localhost:8000/json, http://localhost:8000/xml/[id], http://localhost:8000/json/[id],
 
-
+hasil url = ristek.link/pbptugas3
 # Tugas 2
 # Penjelasan mengenai impelementasi checklist
 
