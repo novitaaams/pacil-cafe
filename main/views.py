@@ -18,7 +18,7 @@ from django.urls import reverse
 
 
 # Create your views here.
-@login_required(login_url='/login')
+@login_required(login_url='/main/login')
 def show_main(request):
     items = Item.objects.filter(user=request.user)
     context = {
