@@ -1,3 +1,117 @@
+# Tugas 4
+
+#  Apa itu Django UserCreationForm, dan jelaskan apa kelebihan dan kekurangannya?
+
+- Django UserCreationForm merupakan kerangka kerja djanggo yang digunakan untuk pembuatan atau registrasi pengguna (user) pada web yang dibangun dengan django. Django UserCrationForm akan membuat formulir pengguna sehingga operasi umum yang dilakukan adalah berkaitan dengan pengguna dan otentikasi. 
+- Kelebihan : 
+ 1. UserCreationForm membantu memvalidasi data pengguna secara otomatis 
+ 2. Form ini telah disediakan oleh Django, sehingga sangat mudah untuk digunakan, tanpa perlu menulis kode secara manual
+ 3. Terhubung dengan model pengguna Django (user) secara otomatis, sehingga data yang dimasukkan akan disimpan di database yang benar
+ 4. Dapat dikostumisasi dengan mudah
+
+ - Kekurangan :
+ 1. Tampilan yang dihasilkan tidak terlalu bagus
+ 2. Form ini dirancang untuk pengguna biasa sehingga memiliki fungsionalitas terbatas
+
+# Apa perbedaan antara autentikasi dan otorisasi dalam konteks Django, dan mengapa keduanya penting?
+
+- Autentikasi adalah proses verifikasi pengguna , tujuannya adalah memastikan bahwa pengguna yang mengakses aplikasi adalah dirinya sendiri. Proses ini contohnya ketika memasukkan username dan password. 
+- Otorisasi adalah proses mengontrol hak akses pengguna setalah mereka berhasil di autentikasi. Pada proses ini akan ditentukan apakah pengakses boleh merubah, melihat dan menghapus sesuatu pada aplikasi sehingga pada proses ini akan ditentukan apakah mereka mengakses atau melakukan sesuatu sesuai dengan peran dan izin. 
+- Autentikasi dan otorisasi sangat penting karena kedua hal ini memastikan apakah pengguna yang mengakses suatu web/aplikasi merupakan orang yang tepat dan yang dilakukan oleh pengguna tersebut merupakan aktivitas yang sesuai dengan peran atau izin. 
+
+# Apa itu cookies dalam konteks aplikasi web, dan bagaimana Django menggunakan cookies untuk mengelola data sesi pengguna?
+
+- cookies adalah data kecil yang disimpan di perangkat pengguna saat pengguna mengunjungi situs web. Cookies adalah salah satu mekanisme yang umum digunakan dalam pengembangan web untuk menyimpan informasi pada perangkat pengguna dan mengidentifikasi sesi pengguna.
+- Saat seorang pengguna masuk atau mengakses sesuatu yang memerlukan identifikasi, Django akan menyimpan data sesi tersebut di server. Data sesi ini dapat berisi informasi seperti ID pengguna yang masuk, preferensi, atau apa pun yang perlu diingat selama sesi.Django kemudian mengirimkan cookie dengan nama sessionid kepada perangkat pengguna. Cookie ini berisi ID sesi yang digunakan oleh Django untuk mengidentifikasi sesi pengguna di server.Setiap kali pengguna membuat permintaan ke situs web, cookie sessionid akan disertakan dalam permintaan HTTP. Django akan mengidentifikasi sesi pengguna berdasarkan cookie ini.  Django akan menggunakan ID sesi yang ditemukan dalam cookie untuk mencari data sesi yang sesuai di server. Data sesi ini kemudian digunakan untuk mengidentifikasi pengguna, mengembalikan preferensi, dan melakukan tindakan lain yang diperlukan selama sesi.
+
+# Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai?
+- Penggunaan cookies sebenarnya aman jika di implementasikan dengan benar. Namun, tetap terdapat risiko potensial yang harus diwaspadai, yaitu tekait dengan keamanan data serta kebocoran informasi. 
+- Cookies bisa saja menyimpan data sensitif, sehingga diperlukannya enkripsi sebelum menyimpan data pada cookies. Kebocoran informasi juga bisa diakibatkan oleh cookies dimana data sensitif yang terdapat pada cookies diakses oleh orang yang tidak sah. Cookies juga dapat digunakan untuk serangan seperti Cross-Site Scripting (XSS) dan Cross-Site Request Forgery (CSRF) jika tidak diimplementasikan dengan benar. Pengembang harus memastikan bahwa aplikasi mereka memiliki langkah-langkah keamanan yang tepat untuk melindungi cookies dari jenis serangan ini. Penggunaan cookies aman juga tergantung pada penggunaan protokol HTTPS yang mengenkripsi lalu lintas antara server dan perangkat pengguna. Tanpa HTTPS, cookies dapat dengan mudah disadap oleh pihak ketiga selama transmisi.
+
+# Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)
+
+1.  Mengimplementasikan fungsi registrasi, login, dan logout untuk memungkinkan pengguna untuk mengakses aplikasi sebelumnya dengan lancar.
+
+- Pada awalnya kita membuat fungsi dan Form registrasi. Fungsi register yang memiliki parameter request dibuat pada views.py pada direktori main. Lalu, membuat form registrasi dengan membuat file register.html dan mengisi dengan template pada main/tempalate. Selanjutnya impor fungsi yang telat dibuat tadi di urls.py pada main dan tambahkan path url dalam urlpatterns
+- Membuat fungsi login pada di views.py pada main beserta impor login pada bagian atas. Selanjutnya membuat berkas login.html pada main/template. Lalu impor dan tambahkan path url dalam urlpatterns di urls.py pada main. 
+- Membuat fungsi logout yang menerima parameter request beserta import logout-nya. Tambahkan potongan kode pada fungsi logout da pada berkas main.html. Terakhir tambahkan import dan tambahkan path url ke dalam urlpatterns
+- Untuk merestrikasi Akses Halaman main import : 
+    from django.contrib.auth.decorators import login_required
+pada views.py di main lalu tambahkan kode : 
+    @login_required(login_url='/login')
+diatas fungsi show_main
+
+2. Membuat dua akun pengguna dengan masing-masing tiga dummy data menggunakan model yang telah dibuat pada aplikasi sebelumnya untuk setiap akun di lokal.
+
+3. Menghubungkan model Item dengan User
+- Tambahkan kode : 
+    from django.contrib.auth.models import User
+pada models.py yang ada pada subdirektori main. Tambahkan juga potongan kode 
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+pada models Item yang sudah dibuat. 
+- Pada view.py di main, ubah potongan create_item mejadi : 
+    def create_item(request):
+ form = ItemForm(request.POST or None)
+
+ if form.is_valid() and request.method == "POST":
+     item = form.save(commit=False)
+     item.user = request.user
+     item.save()
+     return HttpResponseRedirect(reverse('main:show_main'))
+dan ubah fungsi show_main menjad berikut :
+    def show_main(request):
+    item = Item.objects.filter(user=request.user)
+
+    context = {
+        'name': request.user.username,
+    }
+- Setelah itu, lakukan migrasi 
+
+4. Menampilkan detail informasi pengguna yang sedang logged in seperti username dan menerapkan cookies seperti last login pada halaman utama aplikasi.
+- pada views.py tambahkan import :
+    import datetime
+    from django.http import HttpResponseRedirect
+    from django.urls import reverse
+- pada login_user, tambahkan fungsi last_login dengan mengganti kode menjadi berikut: 
+    ...
+    if user is not None:
+        login(request, user)
+        response = HttpResponseRedirect(reverse("main:show_main")) 
+        response.set_cookie('last_login', str(datetime.datetime.now()))
+        return response
+    ...
+- Tambahkan 'last_login': request.COOKIES['last_login'] pada show_main ke variabel context.
+- Ubah fungsi logout_user menjadi :
+    def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response
+- lalu buka main.html dan tambahkann : 
+    <h5>Sesi terakhir login: {{ last_login }}</h5>
+di antara tabel dan tombol logout untuk menampilkan data last login.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Tugas 3
 
 # Apa perbedaan antara form post dan form get dalam djanggo?

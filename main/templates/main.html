@@ -13,7 +13,7 @@
         <th>Name</th>
         <th>Amount</th>
         <th>Description</th>
-ß        </tr>
+        </tr>
 
     {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
 
@@ -31,6 +31,12 @@
 <a href="{% url 'main:create_item' %}">
     <button>
         Add New Item
+    </button>
+</a>
+<h5>Sesi terakhir login: {{ last_login }}</h5>
+<a href="{% url 'main:logout' %}">
+    <button>
+        Logout
     </button>
 </a>
 
