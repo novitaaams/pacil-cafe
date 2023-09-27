@@ -20,8 +20,14 @@
     {% for item in items %}
         <tr>
             <td>{{item.name}}</td>
-            <td>{{item.amount}}</td>
+
+            <td>
+                <button onclick="window.location.href='{% url 'main:decrement_amount' item.id %}'">-</button>
+                <span id="amount{{ item.id }}">{{ item.amount }}</span>
+                <button onclick="window.location.href='{% url 'main:increment_amount' item.id %}'">+</button>
+            </td>
             <td>{{item.description}}</td>
+            <td><button onclick="window.location.href='{% url 'main:delete_item' item.id %}'">Hapus</button></td>
         </tr>
     {% endfor %}
 </table>
