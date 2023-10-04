@@ -59,7 +59,7 @@
     {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
 
     {% for item in items %}
-        <tr>
+    <tr{% if forloop.last %} style="background-color: #d77ba0;"{% endif %}>
             <td>{{item.name}}</td>
 
             <td>
