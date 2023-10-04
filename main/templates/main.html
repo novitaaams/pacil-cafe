@@ -1,13 +1,54 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Pacil Cafe Page</h1>
 
-<h5>Nama aplikasi: </h5>
-<p>{{ nama_aplikasi }}<p>
-<h5>Nama : </h5>
-<p>{{ nama }}<p>
-<h5>Kelas: </h5>
-<p>{{ kelas }}<p>
+<style>
+    
+    body {
+        background-color: rgb(249, 220, 220);
+    
+        
+    }
+
+  
+    .heading {
+        background-color: rgb(233, 185, 185);
+        display: flex;
+        padding: 10px;
+        border-radius: 100px;
+        justify-content: center; 
+        align-items: center; 
+        margin-top: 20px;
+        width: 25%
+        
+    }
+
+    .menu {
+        background-color: rgb(247, 197, 197);
+        display: flex;
+        padding: 10px;
+        border-radius: 50px;
+        justify-content: center; 
+        align-items: center; 
+        margin-top: 20px;
+        width: 25%
+        
+    }
+
+    
+</style>
+<div class = "heading">
+<h1>{{ nama }}'s orders</h1>
+</div>
+
+<div class = "bio">
+<!-- <p>{{ nama_aplikasi }}<p> -->
+<h3>Nama : {{ nama }}</h3>
+<!-- <p>{{ nama }}<p> -->
+<h3>Kelas: {{ kelas }}</h3>
+<!-- <p>{{ kelas }}<p> -->
+</div>
+
+<div class = "menu">
 <table>
     <tr>
         <th>Name</th>
@@ -31,6 +72,7 @@
         </tr>
     {% endfor %}
 </table>
+</div>
 
 <br />
 
@@ -39,7 +81,7 @@
         Add New Item
     </button>
 </a>
-<h5>Sesi terakhir login: {{ last_login }}</h5>
+<h3>Sesi terakhir login: {{ last_login }}</h5>
 <a href="{% url 'main:logout' %}">
     <button>
         Logout

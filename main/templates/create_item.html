@@ -1,19 +1,60 @@
 {% extends 'base.html' %} 
 
 {% block content %}
-<h1>Add New Product</h1>
 
-<form method="POST">
-    {% csrf_token %}
-    <table>
-        {{ form.as_table }}
-        <tr>
-            <td></td>
-            <td>
-                <input type="submit" value="Add Item"/>
-            </td>
-        </tr>
-    </table>
-</form>
+
+<style>
+
+    body {
+        background-color: rgb(249, 220, 220);
+  
+    }
+
+ 
+    .heading {
+        background-color: rgb(233, 185, 185);
+        display: flex;
+        padding: 10px;
+        border-radius: 100px;
+        justify-content: center; 
+        align-items: center; 
+        margin-top: 20px;
+        width: 25%
+        
+    }
+
+    .menu {
+        background-color: rgb(247, 197, 197);
+        display: flex;
+        padding: 10px;
+        border-radius: 10px;
+        justify-content: center; 
+        align-items: center; 
+        margin-top: 20px;
+        width: 30%
+        
+    }
+
+    
+</style>
+
+<div class = "heading">
+<h1>What you want to order?</h1>
+</div>
+
+<div class = "menu">
+    <form method="POST">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+            <tr>
+                <td></td>
+                <td>
+                    <input type="submit" value="Add Item"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
 
 {% endblock %}

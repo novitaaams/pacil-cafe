@@ -1,3 +1,81 @@
+# Tugas 5
+
+# Jelaskan manfaat dari setiap element selector dan kapan waktu yang tepat untuk menggunakannya.
+    - elemen selector digunakan untuk memilih element HTML tertentu berdasarkan nama elemennya. Sehinnga ketika melakukan perubahan pada HTML kita dapat menentukan apakah perubahan tersebut difungsika untuk universal atau hanya di beberapa elemen saja. Dalam kode saya, saya menggunakan elemen selctor dengan tipe class. sehingga perubahan saya hanya berada pada class itu saja.
+
+# Jelaskan HTML5 Tag yang kamu ketahui
+    - <a>: Elemen ini digunakan untuk membuat tautan (link) ke halaman web lain atau ke bagian lain di dalam halaman yang sama.
+    - <head>: Elemen ini digunakan untuk menampung informasi tentang dokumen seperti judul, meta informasi, dan link ke berkas eksternal seperti stylesheet.
+    - <html>: Ini adalah elemen root yang digunakan untuk mengelilingi seluruh isi halaman web.
+    - <style>: Ini digunakan untuk menempatkan kode CSS langsung di dalam halaman HTML.
+    <img>: Ini digunakan untuk menyisipkan gambar dalam halaman web.
+
+# Jelaskan perbedaan antara margin dan padding.
+    - Margin adalah ruang di luar batas luar elemen. Margin digunakan untuk mengatur jarak antara elemen dengan elemen lainnya di sekitarnya, yang dapat memengaruhi tata letak elemen tersebut terhadap elemen lain di halaman.
+    - Padding adalah ruang di antara batas elemen dan kontennya. Padding digunakan untuk mengatur jarak antara konten elemen dan batas elemen tersebut. Dengan kata lain, padding mengatur ruang di dalam elemen. 
+
+    ![Alt text](<Screen Shot 2023-10-04 at 08.42.16.png>)
+    diatas merupakan gambaran perbedaan dari margin dan padding
+
+
+# Jelaskan perbedaan antara framework CSS Tailwind dan Bootstrap. Kapan sebaiknya kita menggunakan Bootstrap daripada Tailwind, dan sebaliknya?
+    - Tailwind CSS dan Bootstrap adalah dua framework CSS yang memiliki pendekatan yang berbeda dalam desain dan pengembangan web. Bootstrap menyediakan komponen siap pakai dengan gaya bawaan yang lebih kaku, sementara Tailwind memberikan utilitas CSS yang sangat fleksibel sehingga lebih baik digunakan ketika diperlukan banyak kustomisasi. Sedangkan Bootsstrap sebaiknya digunakan ketika tidak butuh banyak kustomisasi.
+    
+# Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+    - saya melakuakn pewarnaan dasar pada setiap laman web dan pada elemen html tertentu. Saya melakukan pewarnaan dasar dengan menggunakan :
+    body {
+        background-color: rgb(249, 220, 220);
+    
+        
+    }
+
+    - lalu saya mmbuat class (elemen selector) dan membuat dasar dasar atau merubah warna sesuai dengan keinginan saya, seperti contohnya pada login html, saya membuat ;
+    .container {
+        display: flex;
+        flex-direction: column; 
+        align-items: center; 
+        text-align: center; 
+    }
+
+    .login {
+        background-color: rgb(232, 187, 187);
+        padding: 50px;
+        border-radius: 100px;
+        
+    }
+
+    .heading {
+        background-color: rgb(211, 155, 155);
+        padding:  25px;
+        border-radius: 50px;
+        margin-bottom: 20px;
+    }
+
+
+    container merupakan class yang isinya adalah class login dan heading, sehingga saya bisa megatur tata letak login dan heading pada container, lalu saya mengkutomisasi login dan headingnya spesifik di kelas login dan heading karenna saya mau bentuk yang berbeda pada login dan heading. 
+    Hal tersebut saya gunakan di setiap laman html saya. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Tugas 4
 
 #  Apa itu Django UserCreationForm, dan jelaskan apa kelebihan dan kekurangannya?
