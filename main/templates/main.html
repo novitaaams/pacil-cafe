@@ -2,90 +2,196 @@
 {% block content %}
 
 <style>
-    
     body {
         background-color: rgb(249, 220, 220);
-    
-        
+        font-size: 16px; /* Ukuran teks utama */
+        font-family: 'Courier New', monospace; 
     }
 
-  
+    .container {
+        max-width: 1200px; /* Maksimum lebar konten */
+        margin: 0 auto; /* Pusatkan konten di tengah layar */
+    }
+
     .heading {
         background-color: rgb(233, 185, 185);
         display: flex;
-        padding: 10px;
+        padding: 20px;
         border-radius: 100px;
-        justify-content: center; 
-        align-items: center; 
+        justify-content: center;
+        align-items: center;
         margin-top: 20px;
-        width: 25%
+    }
+
+    #item_card {
+        display: flex;
+        flex-wrap: nowrap; /* Tetap berjejer tanpa memulai baris baru */
+        overflow-x: auto; /* Tampilkan scroll horizontal jika tidak cukup lebar */
+    }
+
+    .card {
+        width: 300px; /* Sesuaikan lebar kartu sesuai kebutuhan */
+        height: 300px; /* Atur tinggi kartu sesuai kebutuhan */
+        max-width: 100%; /* Batasi lebar maksimum kartu */
+        margin-right: 10px; /* Beri jarak antara kartu */
+        margin-bottom: 20px;
+    }
+
+    .logout {
+        background-color: rgb(201, 124, 137);
+        /* You can customize other styles as needed, like text color, padding, etc. */
+        color: white; /* Text color */
+        padding: 10px 20px; /* Padding around the button */
+        /* Add more styles as needed */
+        border-radius: 20px;
+    }
+
+    .add-item {
+        background-color: rgb(201, 124, 137);
+        /* You can customize other styles as needed, like text color, padding, etc. */
+        color: white; /* Text color */
+        padding: 10px 20px; /* Padding around the button */
+        /* Add more styles as needed */
+        border-radius: 20px;
+        
         
     }
 
-    .menu {
-        background-color: rgb(247, 197, 197);
-        display: flex;
-        padding: 10px;
-        border-radius: 50px;
-        justify-content: center; 
-        align-items: center; 
-        margin-top: 20px;
-        width: 25%
-        
+    .btn-secondary {
+        background-color: rgb(201, 124, 137);
+        /* You can customize other styles as needed, like text color, padding, etc. */
+        color: white; /* Text color */
+        padding: 10px 20px; /* Padding around the button */
+        /* Add more styles as needed */
+        border-radius: 20px;
     }
+
+    .card:last-child {
+    background-color: rgb(212, 111, 142);
+    }
+
+</style>
+
+<div class="container">
+    <div class="heading">
+        <h1>{{ nama }}'s orders</h1>
+    </div>
+
+    <div class="bio">
+        <h3>Nama: {{ nama }}</h3>
+        <h3>Kelas: {{ kelas }}</h3>
+    </div>
+
+    <div id="item_card" class="row">
+    </div>
+
+    <button type="button" class="btn btn-primary add-item" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Add Item by AJAX
+    </button>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Item</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form" onsubmit="return false;">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="col-form-label">Amount:</label>
+                            <input type="number" class="form-control" id="amount" name="amount"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="description" name="description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a href="{% url 'main:logout' %}">
+        <button class="logout">
+            Logout
+        </button>
+    </a>
 
     
-</style>
-<div class = "heading">
-<h1>{{ nama }}'s orders</h1>
+    <h5>Sesi terakhir login: {{ last_login }}</h5>
 </div>
 
-<div class = "bio">
-<!-- <p>{{ nama_aplikasi }}<p> -->
-<h3>Nama : {{ nama }}</h3>
-<!-- <p>{{ nama }}<p> -->
-<h3>Kelas: {{ kelas }}</h3>
-<!-- <p>{{ kelas }}<p> -->
-</div>
+    <script>
+        async function getItems() {
+            return fetch("{% url 'main:get_item_json' %}").then((res) => res.json())
+        }
 
-<div class = "menu">
-<table>
-    <tr>
-        <th>Name</th>
-        <th>Amount</th>
-        <th>Description</th>
-        </tr>
+        async function refreshItems() {
+            const items = await getItems();
+            const itemCard = document.getElementById("item_card");
+            itemCard.innerHTML = ""; // Kosongkan elemen sebelum menambahkan kartu
 
-    {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
+            items.forEach((item) => {
+                const card = document.createElement("div");
+                card.className = "card";
 
-    {% for item in items %}
-    <tr{% if forloop.last %} style="background-color: #d77ba0;"{% endif %}>
-            <td>{{item.name}}</td>
+                card.innerHTML = `
+                <div class="card-body">
+                    <h5 class="card-title">${item.fields.name}</h5>
+                    <p class="card-text">${item.fields.description}</p>
+                    <p class="card-text">Amount: ${item.fields.amount}</p>
+                    <a href="increment_amount/${item.pk}" class="btn btn-secondary" style="margin-left: 5px;">+</a> ${item.fields.amount}
+                    <a href="decrement_amount/${item.pk}"class="btn btn-secondary" style="margin-right: 30px;">-</a>                </div>
+                    <button data-id="${item.pk}" class="btn btn-danger btn-sm" onclick="deleteItem(this.getAttribute('data-id'))">Delete</button>
+                `   
+                ;
 
-            <td>
-                <button onclick="window.location.href='{% url 'main:decrement_amount' item.id %}'">-</button>
-                <span id="amount{{ item.id }}">{{ item.amount }}</span>
-                <button onclick="window.location.href='{% url 'main:increment_amount' item.id %}'">+</button>
-            </td>
-            <td>{{item.description}}</td>
-            <td><button onclick="window.location.href='{% url 'main:delete_item' item.id %}'">Hapus</button></td>
-        </tr>
-    {% endfor %}
-</table>
-</div>
+                itemCard.appendChild(card);
+                
+                
+            });
+        }
 
-<br />
+        refreshItems();
 
-<a href="{% url 'main:create_item' %}">
-    <button>
-        Add New Item
-    </button>
-</a>
-<h3>Sesi terakhir login: {{ last_login }}</h5>
-<a href="{% url 'main:logout' %}">
-    <button>
-        Logout
-    </button>
-</a>
+        async function deleteItem(itemId) {
+            const deleteUrl = `{% url 'main:delete_item_ajax' item_id=999 %}`.replace('999', itemId);
+            console.log(itemId);
+            try {
+                const response = await fetch(deleteUrl, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    }
+                }).then(refreshItems)
+                
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function addItem() {
+            fetch("{% url 'main:add_item_ajax' %}", {
+                method: "POST",
+                body: new FormData(document.querySelector('#form'))
+            }).then(refreshItems);
+
+            document.getElementById("form").reset();
+            return false;
+        }
+
+        document.getElementById("button_add").onclick = addItem;
+    </script>
+
 
 {% endblock content %}

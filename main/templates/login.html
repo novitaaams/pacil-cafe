@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block meta %}
     <title>Login</title>
@@ -14,6 +15,8 @@
         align-items: center; 
         height: 100vh; 
         margin: 0; 
+        font-family: 'Courier New', monospace;
+        background-image: url("{% static 'donat.jpg' %}");
         
     }
 
