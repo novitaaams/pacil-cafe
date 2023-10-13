@@ -1,3 +1,177 @@
+# Tugas 6 
+
+# Jelaskan perbedaan antara asynchronous programming dengan synchronous programming 
+    - Synchronous programming adalah operasi yang dijalankan secara berurutan. Sehingga apabila terdapat operasi yang membutuhkan waktu yang lama, program akan terhenti dan menunggu hingga operasi selesai. Operasi tersebut disebut dengan "blocking".
+
+    - Asynchronous programming adalah program yang memungkinkan untuk mengeksekusi beberapa tugas secara  bersamaan. Apabila terdapat operasi yang membutuhkan waktu, maka program lain tetap akan dijalankan, tanpa menunggu operasi tersebut selesai terlebih dahulu. Tidak melakukikan "blocking".
+
+# Dalam penerapan JavaScript dan AJAX, terdapat penerapan paradigma event-driven programming. Jelaskan maksud dari paradigma tersebut dan sebutkan salah satu contoh penerapannya pada tugas ini.
+
+    - Paradigma event-driven programming adalah pendekatan pemrograman di mana program merespons peristiwa (events) yang terjadi secara asinkronus. Dalam konteks JavaScript dan AJAX, program akan merespons peristiwa seperti klik tombol, pengiriman data melalui jaringan, atau interaksi pengguna lainnya. Program akan menunggu peristiwa ini dan menjalankan kode yang ditentukan ketika peristiwa terjadi.
+    - Contoh penerapan pada tugas ini yaitu pada tombol penambahan item dan tombol delete item 
+
+# Jelaskan penerapan asynchronous programming pada AJAX.
+    - Penerapan asynchronous programming pada AJAX (Asynchronous JavaScript and XML) memungkinkan aplikasi web untuk mengirim permintaan ke server tanpa menghalangi atau menghentikan eksekusi kode JavaScript lainnya. Dalam konteks AJAX, ini sangat penting karena koneksi ke server dapat memakan waktu yang bervariasi. Dengan pendekatan asynchronous, kita dapat menggunakan fungsi XMLHttpRequest atau metode baru seperti fetch untuk mengirim permintaan HTTP ke server tanpa harus menunggu respon langsung. Sebagai contoh, saat pengguna mengklik tombol untuk memuat data tambahan, permintaan AJAX dapat dikirim, dan pada saat yang sama, aplikasi dapat melanjutkan menjalankan kode lainnya. Ketika respon dari server diterima, fungsi callback akan dipanggil untuk menangani data tersebut. Ini memungkinkan pengalaman pengguna yang lebih responsif, karena tidak ada penundaan panjang saat menunggu server merespons. Keseluruhan proses ini memanfaatkan sifat asynchronous dari JavaScript untuk meningkatkan efisiensi dan interaktivitas dalam pengembangan aplikasi web.
+
+# Pada PBP kali ini, penerapan AJAX dilakukan dengan menggunakan Fetch API daripada library jQuery. Bandingkanlah kedua teknologi tersebut dan tuliskan pendapat kamu teknologi manakah yang lebih baik untuk digunakan.
+    - Perbedaan Fetch API san library jQuery adalah kompleksitas Fetch API lebih sederhana dan ringan dibandingkan library jQuery. API hanya fokus pada pengambilan sumber daya dari server dan pengelolaan respons, sementara jQuery memiliki banyak fitur tambahan seperti animasi dan manipulasi DOM yang mungkin tidak diperlukan dalam semua proyek.
+    - Fetch API memiliki ukuran yang lebih kecil daripada jQuery, yang dapat mempercepat waktu pemuatan halaman.
+    - Fetch API seringkali lebih cepat dalam kinerja daripada jQuery karena lebih ringan. Ini bisa menjadi pertimbangan penting jika hanya berfokus pada aplikasi web yang memerlukan kecepatan tinggi.
+    - Fetch API adalah bagian dari spesifikasi JavaScript standar, sehingga memiliki dukungan yang kuat di semua peramban modern. jQuery, sementara itu, meskipun masih banyak digunakan, tidak lagi mendapatkan pembaruan aktif. Ini berarti Fetch API lebih berkelanjutan dalam jangka panjang.
+    - Fetch API memungkinkan pengembang untuk lebih kustomisasi dalam mengelola permintaan dan respons HTTP. jQuery memiliki antarmuka yang lebih tingkat tinggi dan abstraksi yang lebih kuat.
+    - Penggunaan jQuery relatif lebih mudah dibandingkan dengan menggunakan Fetch API. 
+    - Untuk proyek-proyek yang lebih kecil, lebih sederhana, dan berfokus pada kinerja dan keberlanjutan, Fetch API mungkin menjadi pilihan yang lebih baik. Namun, jika memerlukan fitur-fitur jQuery khusus atau sedang bekerja pada proyek yang sudah menggunakan jQuery, maka tetap menggunakan jQuery mungkin lebih praktis. Untuk pembelajaran PBP karena proyek yang sederhana, maka penggunaan Fetch API menurut saya lebih praktis untuk digunakan. 
+
+# Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+
+
+1.  Membuat fungsi baru pada views.py yang menerima parameter request dengan nama get_item_json yang nantinya akan dipanggil pada main.html
+    def get_product_json(request):
+        product_item = Oculi.objects.all()
+        return HttpResponse(serializers.serialize('json', product_item))
+
+Setelah itu, menambahkan fungsi : 
+    @csrf_exempt
+    def add_item_ajax(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        amount = request.POST.get("amount")
+        description = request.POST.get("description")
+        user = request.user
+
+        new_product = Product(name=name, amount=amount, description=description, user=user)
+        new_product.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
+pada views.py dan menambahkan path pada urls.py sebagai berikut : 
+    path('get-product/', get_product_json, name='get_product_json'),
+    path('create-product-ajax/', add_product_ajax, name='add_product_ajax')
+
+
+2. Membuat container sebagai tempat untuk card tersebut
+            <div id="item_card" class="row">  </div>
+
+3. Membuat fungsi JScript yang berisi 
+    async function getItems() {
+            return fetch("{% url 'main:get_item_json' %}").then((res) => res.json())
+        }
+
+    async function refreshItems() {
+            const items = await getItems();
+            const itemCard = document.getElementById("item_card");
+            itemCard.innerHTML = ""; // Kosongkan elemen sebelum menambahkan kartu
+
+            items.forEach((item) => {
+                const card = document.createElement("div");
+                card.className = "card";
+
+                card.innerHTML = `
+                <div class="card-body">
+                    <h5 class="card-title">${item.fields.name}</h5>
+                    <p class="card-text">${item.fields.description}</p>
+                    <p class="card-text">Amount: ${item.fields.amount}</p>
+                    <a href="increment_amount/${item.pk}" class="btn btn-secondary" style="margin-left: 5px;">+</a> ${item.fields.amount}
+                    <a href="decrement_amount/${item.pk}"class="btn btn-secondary" style="margin-right: 30px;">-</a>                </div>
+                    <button data-id="${item.pk}" class="btn btn-danger btn-sm" onclick="deleteItem(this.getAttribute('data-id'))">Delete</button>
+                `   
+                ;
+
+                itemCard.appendChild(card);
+                
+                
+            });
+        }
+yang mana get items digunakan untuk mendapatkan item dan refresh item untuk menampilkan semua product nantinya di card
+
+4. Membuat modal sebagai tempat untuk menambahkan objek baru
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Item</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form" onsubmit="return false;">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control" id="name" name="name"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="col-form-label">Amount:</label>
+                            <input type="number" class="form-control" id="amount" name="amount"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="col-form-label">Description:</label>
+                            <textarea class="form-control" id="description" name="description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Item</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+5. Membuat add item by ajax dengan menulis kode berikut :
+
+
+<button type="button" class="btn btn-primary add-item" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        Add Item by AJAX
+    </button>
+
+6. Membuat fungsi yang ketika button add item di klik akan menambahkan item 
+
+    function addItem() {
+            fetch("{% url 'main:add_item_ajax' %}", {
+                method: "POST",
+                body: new FormData(document.querySelector('#form'))
+            }).then(refreshItems);
+
+            document.getElementById("form").reset();
+            return false;
+        }
+
+    document.getElementById("button_add").onclick = addItem;
+
+
+
+7. Membuat event listener agar mendeteksi saat button di tekan
+    document.getElementById("button_add").onclick = addItem;
+
+8. Saya juga melakukan perubahan warna pada button, hal tersebut saya lakukan dengan membuat class pada button dan melakukan perubahan warna pada sytle dengan css. Selain itu, saya menambahkan button delete dan increase decrease, hal tersebut saya lakukan dengan step by step yang sama tetapi fungsi yang saya buat di view.py memiliki fungsionalitas yang berbeda.  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # Tugas 5
 
 # Jelaskan manfaat dari setiap element selector dan kapan waktu yang tepat untuk menggunakannya.
